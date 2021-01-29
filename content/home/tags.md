@@ -3,6 +3,9 @@
 # Docs: https://wowchemy.com/docs/page-builder/
 widget: tag_cloud
 
+# Activate/Deactivate this widget. 
+active: false 
+
 # This file represents a page section.
 headless: true
 
