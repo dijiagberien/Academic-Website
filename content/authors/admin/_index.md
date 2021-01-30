@@ -61,9 +61,7 @@ email: ""
 highlight_name: false
 ---
 
-It is a big beautiful complex world we live in; lots of data, lots of insight, and an impact to make. I will challenge myself with projects and share my insights here...fun times ahead. In other news, I am currently a Biology and Data Science graduate student at Carleton University. 
-
-**Some subjects I find interesting:** Ecology | Bioinformatics | Statistics | Machine Learning
+ I reside in Ottawa, Canada's capital city, where I am currently a Biology and Data Science MSc. candidate. I attained my BSc. in Environmental Science, with minors in Biology and Statistics. Prior to pursuing grad studies, I worked as a Teaching Assistant and a Research Assistant at Carleton, and upon graduation, as a Data Analyst for Ecofish Research. My research interests are Statistics, Bioinformatics, Ecology, and Machine Learning. ​I created this site to showcase select projects of interest and engage in conversations with like-minded individuals tackling similar projects. 
 
 **Software skills:** R programming | Tableau | MS Excel
 
