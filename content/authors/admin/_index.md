@@ -17,10 +17,7 @@ organizations:
 bio: My research interests include bioinformatics, ecology, and machine learning.
 
 # Interests to show in About widget
-interests:
-- Ecology
-- Bioinformatics
-- Machine Learning
+interests: 
 
 # Education to show in About widget
 education:
@@ -64,6 +61,10 @@ email: ""
 highlight_name: false
 ---
 
-I am a firm believer in the Ronald Coase quote "Torture  the data, and it will confess to anything". My take, you just have to be asking the right questions. Broadly speaking, some of the topics I enjoy include Ecology, Bioinformatics, and Machine Learning. I am currently a Biology and Data Science graduate student at Carleton University.
+It is a big beautiful complex world we live in; lots of data, lots of insight, and an impact to make. I will challenge myself with projects and share my insights here...fun times ahead. In other news, I am currently a Biology and Data Science graduate student at Carleton University. 
 
-{{< icon name="download" pack="fas" >}} Download my {{< staticref "media/demo_resume.pdf" "newtab" >}}resumé{{< /staticref >}}.
+**Some subjects I find interesting:** Ecology | Bioinformatics | Statistics | Machine Learning
+
+**Software skills:** R programming | Tableau | MS Excel
+
+_"Study hard what interests you the most, in the most undisciplined, irreverent and original manner possible"_ - Richard Feynmann
