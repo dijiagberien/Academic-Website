@@ -61,8 +61,11 @@ email: ""
 highlight_name: false
 ---
 
- I reside in Ottawa, Canada's capital city, where I am currently a Biology and Data Science MSc. candidate. I attained my BSc. in Environmental Science, with minors in Biology and Statistics. Prior to pursuing grad studies, I worked as a Teaching Assistant and a Research Assistant at Carleton, and upon graduation, as a Data Analyst for Ecofish Research. My research interests are Statistics, Bioinformatics, Ecology, and Machine Learning. ​I created this site to showcase select projects of interest and engage in conversations with like-minded individuals tackling similar projects. 
+ Hi, I am Adogbeji Agberien, but the homies call me Diji. I reside in Ottawa, Canada's capital city, where I am currently a Biology and Data Science MSc. candidate. I attained my BSc. in Environmental Science, with minors in Biology and Statistics. Prior to pursuing grad studies, I worked as a Teaching Assistant and a Research Assistant at Carleton, and upon graduation, as a Data Analyst for Ecofish Research. My research interests are Statistics, Bioinformatics, Ecology, and Machine Learning. ​I created this site to showcase select projects of interest and engage in conversations with like-minded individuals tackling similar projects. 
 
-**Software skills:** R programming | Tableau | MS Excel
+**Software skills:** R programming | Python | Tableau | MS Excel
+
+**Certifications:** Python from kaggle 
+
 
 _"Study hard what interests you the most, in the most undisciplined, irreverent and original manner possible"_ - Richard Feynmann

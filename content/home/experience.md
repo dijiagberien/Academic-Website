@@ -31,7 +31,8 @@ experience:
     description: |1-
         Responsibilities include:
         
-        * Utilization of machine learning tools (typically unsupervised ML) to investigate animal behaviour
+        * Perfomed data preprocessing, data structure maniplication, and utilized statistical tools to improve data quality
+        * Utilized of machine learning tools (typically unsupervised ML) to investigate animal behaviour
         * Development of management tools to aid habitat rehabilitation or restoration
         
   - title: Data Analyst
