@@ -31,9 +31,9 @@ experience:
     description: |1-
         Responsibilities include:
         
-        * Perfomed data preprocessing, data structure maniplication, and utilized statistical tools to improve data quality
-        * Utilized of machine learning tools (typically unsupervised ML) to investigate animal behaviour
-        * Development of management tools to aid habitat rehabilitation or restoration
+        * Performed data pre-processing, data structure manipulation, and utilized statistical tools to improve data quality. 
+        * Utilized machine learning tools (typically unsupervised ML) to investigate animal behaviour.
+        * Development of management tools to aid habitat rehabilitation or remediation.
         
   - title: Data Analyst
     company: Ecofish Research
@@ -44,8 +44,8 @@ experience:
     description: |2-
         Responsibilities:
 
-        * Analysis of ecological and hydrological data 
-        * Development of tools to automate standard deliverables (figures, tables, summaries, etc)
+        * Performed analysis of ecological and hydrological data
+        * Development of tools to automate standard deliverables (figures, tables, summaries, etc).
         * Performed analysis to facilitate commissioning of hydroelectric facilities
 
   - title: Research Assistant
@@ -57,8 +57,10 @@ experience:
     description: |2-
         Responsibilities:
         
-        * Analysis of data from a waste water treatment plant to evaluate effectiveness in removing grades of microplastics prior to effluent release
-        * Statistical methods for regression analysis and model evaluation were utilized
+        * Analysed data from an Ottawa wastewater treatment plant to evaluate its 
+        effectiveness in removing grades for microplastics prior to effluent release.
+        * Effectively utilized statistical methods for regression analysis and
+        model evaluation.
 
   - title: Teaching Assistant
     company: Carleton University, Dept of Mathematics and Statistics
