@@ -5,10 +5,10 @@ date: '2021-02-06'
 slug: []
 categories: []
 tags:
-  - IMMIGRATION
-  - CANADA
-  - DATAVISUALIZATION
-  - TABLEAU
+  - Immigration
+  - Canada
+  - Data visualization
+  - Tableau
 subtitle: ''
 summary: 'This post is the Canadian immigration story as told by the numbers from 1930 till 2013. The visuals are interactive, so go ahead and have some fun with it. I provide a walkthrough of my analysis with accompanying R codes.'
 authors: [admin]
