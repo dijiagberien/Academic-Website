@@ -22,6 +22,7 @@ date_format: Jan 2006
 #   Leave `date_end` empty if it's your current employer.
 #   Begin multi-line descriptions with YAML's `|2-` multi-line prefix.
 experience:
+
   - title: Graduate Research Assistant
     company: Carleton University, Dept of Biology and Data Science
     company_url: ''
@@ -29,11 +30,8 @@ experience:
     date_start: '2019-09-01'
     date_end: ''
     description: |1-
-        Responsibilities include:
         
-        * Performed data pre-processing, data structure manipulation, and utilized statistical tools to improve data quality. 
-        * Utilized machine learning tools (typically unsupervised ML) to investigate animal behaviour.
-        * Development of management tools to aid habitat rehabilitation or remediation.
+        * Research on utilization of unsupervised machine learning as a tool to explore telemetry data, and subsequently behaviour. 
         
   - title: Data Analyst
     company: Ecofish Research
@@ -42,11 +40,9 @@ experience:
     date_start: '2018-06-01'
     date_end: '2018-12-31'
     description: |2-
-        Responsibilities:
+        
+        * Analysis of ecological and hydrological data to facilitate commissioning of hydroelectric facilities, and additionally, development of summary reports. 
 
-        * Performed analysis of ecological and hydrological data
-        * Development of tools to automate standard deliverables (figures, tables, summaries, etc).
-        * Performed analysis to facilitate commissioning of hydroelectric facilities
 
   - title: Research Assistant
     company: Carleton University, Dept of Environmental Science
@@ -55,12 +51,8 @@ experience:
     date_start: '2017-06-01'
     date_end: '2018-04-30'
     description: |2-
-        Responsibilities:
-        
-        * Analysed data from an Ottawa wastewater treatment plant to evaluate its 
-        effectiveness in removing grades for microplastics prior to effluent release.
-        * Effectively utilized statistical methods for regression analysis and
-        model evaluation.
+    
+        * Analysis of wastewater treatment data to inform on the effectiveness of removing microplastics from water prior to effluent release. 
 
   - title: Teaching Assistant
     company: Carleton University, Dept of Mathematics and Statistics
@@ -69,11 +61,8 @@ experience:
     date_start: '2017-09-01'
     date_end: '2017-12-31'
     description: |2-
-        Responsibilities:
         
-        * Taught first-year differential and integral calculus 
-        * Graded assignemts and held A LOT of office hours
-        * Was nominated for the "Best Teaching Assistant" award, sadly didn't win
+        * Taught first-year differential and integral calculus, graded assignments. Was nominated for the *Best Teaching Assistant* award, sadly didn't win
 
   - title: Research Assistant
     company: Carleton University, Dept of Environmental Engineering
@@ -82,9 +71,7 @@ experience:
     date_start: '2016-09-01'
     date_end: '2017-08-31'
     description: |2-
-        Responsibilities include:
-        
-        * Grew and maintained cultures of toxic and non-toxic cyanobacteria
-        * Meta-analysis of papers related to the subject matter
-        * Leveraged signal processing (Savitzky-Golay) and derivatives to improve spectrophotometric detections
+    
+        * Analysis of surface water data, in particular, those pertaining to the presence of cyanobacteria. A by product was a publication (here) in which we utilized leveraged signal processing method (Savitzky-Golay) and derivatives to improve spectrophotometric detections. 
+
 ---
