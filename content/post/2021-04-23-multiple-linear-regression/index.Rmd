@@ -1,0 +1,111 @@
+---
+title: Multiple Linear Regression
+author: Adogbeji Agberien
+date: '2021-04-23'
+slug: []
+categories: []
+tags: []
+subtitle: ''
+summary: 'This post is about Multiple Linear Regression; currently just implementation in R, hopefully will soon update to include the theory of the method'
+authors: []
+lastmod: '2021-04-23T13:55:47-04:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This post is about multiple linear regression; currently just implementation in R, hopefully will soon update to include the theory of the method. The data was acquired from 
+[superdatascience](https://www.superdatascience.com/pages/machine-learning). They do a great job of teaching the topic as well. 
+
+```{r warning=F, message=F}
+# Install and load packages
+required_packages <- c("tidyverse", "data.table", "caTools",
+                       "rmarkdown", "knitr")
+
+packageCheck <- lapply(required_packages, FUN = function(x) {
+  if(!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})
+```
+
+# About the data
+
+It is a relatively small dataset (50 $\times$ 5), in which we try to predict the profit based on the given predictor variables - R&D Spend, Administration, Marketing Spend, and State. The target (response) variable is Profit, while the other variables are considered predictor variables. 
+
+```{r echo = F}
+# Import the data 
+salary_data <- fread("C:/Users/diji_/Desktop/Data Science/Machine Learning A-Z (Codes and Datasets)/Part 2 - Regression/Section 5 - Multiple Linear Regression/R/50_Startups.csv")
+```
+
+```{r}
+# See the first few rows of the data
+salary_data[1:5, ]
+```
+
+State is a categorical variable with the others being numerical variables so this implies that we have to encode the state variable.
+
+```{r}
+# Encode the categorical variables 
+salary_data$State <- factor(salary_data$State, 
+                            levels = unique(salary_data$State), 
+                            labels = c(1:3))
+salary_data$State
+```
+
+```{r}
+# Split the data into training and test sets 
+set.seed(123)
+salary_split <- sample.split(salary_data$Profit, SplitRatio = 0.8)
+training_data <- subset(salary_data, salary_split == T)
+test_data <- subset(salary_data, salary_split == F)
+```
+
+Importantly, not every variable may be important in predicting profit, in simple terms, some variables may decrease the capability of the model. So here we try backward elimination, excluding variables based on their p-values, i.e., the variable with the highest p-value will be removed from the model, and the process will continue until the variables remaining in the model all have p-values less than the significance level e.g. p-value < s.l. = 0.05
+
+```{r}
+# Create a MLR model and get summary of the model
+mlr_salary_full <- lm(Profit ~ `R&D Spend` + Administration + `Marketing Spend` + State, data = training_data)
+
+# Get the summary of the regressor 
+summary(mlr_salary_full)
+```
+
+```{r}
+# Make model without the State categorical variable
+mlr_salary_noState <- lm(Profit ~ `R&D Spend` + Administration + `Marketing Spend`, data = training_data)
+summary(mlr_salary_noState)
+```
+
+```{r}
+mlr_noState_noAdmin <- lm(Profit ~ `R&D Spend` + `Marketing Spend`, data = training_data)
+summary(mlr_noState_noAdmin)
+```
+
+```{r}
+mlr_salary_RD <- lm(Profit ~ `R&D Spend`, data = training_data)
+summary(mlr_salary_RD)
+```
+
+Below we simply use the stepAIC function from MASS library to automate the process of backward elimination. Forward selection, or stepwise could also be selected as direction in the MLR model. 
+
+```{r}
+# Backward regression using stepAIC from MASS package
+library(MASS)
+mlr_backward <- stepAIC(mlr_salary_full, direction = "backward", trace = 1)
+```
+
+```{r}
+# Get model summary
+summary(mlr_backward)
+```
+
+To determine which model to use, we can use the adjusted R-squared. Based on this metric, I will select the model with R&D Spend and Marketing in the model. Real simple! 

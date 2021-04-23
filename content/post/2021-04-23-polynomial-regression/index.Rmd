@@ -1,0 +1,58 @@
+---
+title: Polynomial Regression
+author: Adogbeji Agberien
+date: '2021-04-23'
+slug: []
+categories: []
+tags: []
+subtitle: ''
+summary: 'This post is about Polynomial Regression; currently just implementation in R, hopefully will soon update to include the theory of the method'
+authors: []
+lastmod: '2021-04-23T14:03:16-04:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r warning=F, message = F}
+# Install and load packages
+required_packages <- c("tidyverse", "data.table", "caTools",
+                       "rmarkdown", "knitr")
+
+packageCheck <- lapply(required_packages, FUN = function(x) {
+  if(!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})
+```
+
+This post is about Polynomial Regression; currently just implementation in R, hopefully will soon update to include the theory of the method. The data was acquired from 
+[superdatascience](https://www.superdatascience.com/pages/machine-learning). They do a great job of teaching the topic as well. 
+
+```{r echo = F}
+# Import the data
+salary_data <- fread("C:/Users/diji_/Desktop/Data Science/Machine Learning A-Z (Codes and Datasets)/Part 2 - Regression/Section 6 - Polynomial Regression/R/Position_Salaries.csv")
+```
+
+```{r}
+ggplot(data = salary_data, aes(x = Level, y = Salary)) +
+  geom_point() +
+  theme_classic()
+```
+
+```{r}
+poly_salary_model <- lm(Salary ~ poly(Level, 4), data = salary_data)
+summary(poly_salary_model)
+```
+
+```{r}
+ggplot(data = salary_data, aes(x = Level, y = Salary)) +
+  geom_point(colour = "black") +
+  geom_line(aes(x = Level, y = predict(poly_salary_model, salary_data)), colour = "red") +
+  theme_classic()
+```
+

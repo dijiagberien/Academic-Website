@@ -1,0 +1,211 @@
+---
+title: Multiple Linear Regression
+author: Adogbeji Agberien
+date: '2021-04-23'
+slug: []
+categories: []
+tags: []
+subtitle: ''
+summary: 'This post is about Multiple Linear Regression; currently just implementation in R, hopefully will soon update to include the theory of the method'
+authors: []
+lastmod: '2021-04-23T13:55:47-04:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<p>This post is about multiple linear regression; currently just implementation in R, hopefully will soon update to include the theory of the method. The data was acquired from
+<a href="https://www.superdatascience.com/pages/machine-learning">superdatascience</a>. They do a great job of teaching the topic as well.</p>
+<pre class="r"><code># Install and load packages
+required_packages &lt;- c(&quot;tidyverse&quot;, &quot;data.table&quot;, &quot;caTools&quot;,
+                       &quot;rmarkdown&quot;, &quot;knitr&quot;)
+
+packageCheck &lt;- lapply(required_packages, FUN = function(x) {
+  if(!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})</code></pre>
+<div id="about-the-data" class="section level1">
+<h1>About the data</h1>
+<p>It is a relatively small dataset (50 <span class="math inline">\(\times\)</span> 5), in which we try to predict the profit based on the given predictor variables - R&amp;D Spend, Administration, Marketing Spend, and State. The target (response) variable is Profit, while the other variables are considered predictor variables.</p>
+<pre class="r"><code># See the first few rows of the data
+salary_data[1:5, ]</code></pre>
+<pre><code>##    R&amp;D Spend Administration Marketing Spend      State   Profit
+## 1:  165349.2      136897.80        471784.1   New York 192261.8
+## 2:  162597.7      151377.59        443898.5 California 191792.1
+## 3:  153441.5      101145.55        407934.5    Florida 191050.4
+## 4:  144372.4      118671.85        383199.6   New York 182902.0
+## 5:  142107.3       91391.77        366168.4    Florida 166187.9</code></pre>
+<p>State is a categorical variable with the others being numerical variables so this implies that we have to encode the state variable.</p>
+<pre class="r"><code># Encode the categorical variables 
+salary_data$State &lt;- factor(salary_data$State, 
+                            levels = unique(salary_data$State), 
+                            labels = c(1:3))
+salary_data$State</code></pre>
+<pre><code>##  [1] 1 2 3 1 3 1 2 3 1 2 3 2 3 2 3 1 2 1 3 1 2 1 3 3 1 2 3 1 3 1 3 1 2 3 2 1 3 2
+## [39] 1 2 2 3 2 1 2 1 3 2 1 2
+## Levels: 1 2 3</code></pre>
+<pre class="r"><code># Split the data into training and test sets 
+set.seed(123)
+salary_split &lt;- sample.split(salary_data$Profit, SplitRatio = 0.8)
+training_data &lt;- subset(salary_data, salary_split == T)
+test_data &lt;- subset(salary_data, salary_split == F)</code></pre>
+<p>Importantly, not every variable may be important in predicting profit, in simple terms, some variables may decrease the capability of the model. So here we try backward elimination, excluding variables based on their p-values, i.e., the variable with the highest p-value will be removed from the model, and the process will continue until the variables remaining in the model all have p-values less than the significance level e.g. p-value &lt; s.l. = 0.05</p>
+<pre class="r"><code># Create a MLR model and get summary of the model
+mlr_salary_full &lt;- lm(Profit ~ `R&amp;D Spend` + Administration + `Marketing Spend` + State, data = training_data)
+
+# Get the summary of the regressor 
+summary(mlr_salary_full)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Profit ~ `R&amp;D Spend` + Administration + `Marketing Spend` + 
+##     State, data = training_data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -33128  -4865      5   6098  18065 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        4.965e+04  7.637e+03   6.501 1.94e-07 ***
+## `R&amp;D Spend`        7.986e-01  5.604e-02  14.251 6.70e-16 ***
+## Administration    -2.942e-02  5.828e-02  -0.505    0.617    
+## `Marketing Spend`  3.268e-02  2.127e-02   1.537    0.134    
+## State2             1.213e+02  3.751e+03   0.032    0.974    
+## State3             2.376e+02  4.127e+03   0.058    0.954    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 9908 on 34 degrees of freedom
+## Multiple R-squared:  0.9499, Adjusted R-squared:  0.9425 
+## F-statistic:   129 on 5 and 34 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code># Make model without the State categorical variable
+mlr_salary_noState &lt;- lm(Profit ~ `R&amp;D Spend` + Administration + `Marketing Spend`, data = training_data)
+summary(mlr_salary_noState)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Profit ~ `R&amp;D Spend` + Administration + `Marketing Spend`, 
+##     data = training_data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -33117  -4858    -36   6020  17957 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        4.970e+04  7.120e+03   6.980 3.48e-08 ***
+## `R&amp;D Spend`        7.983e-01  5.356e-02  14.905  &lt; 2e-16 ***
+## Administration    -2.895e-02  5.603e-02  -0.517    0.609    
+## `Marketing Spend`  3.283e-02  1.987e-02   1.652    0.107    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 9629 on 36 degrees of freedom
+## Multiple R-squared:  0.9499, Adjusted R-squared:  0.9457 
+## F-statistic: 227.6 on 3 and 36 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>mlr_noState_noAdmin &lt;- lm(Profit ~ `R&amp;D Spend` + `Marketing Spend`, data = training_data)
+summary(mlr_noState_noAdmin)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Profit ~ `R&amp;D Spend` + `Marketing Spend`, data = training_data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -33294  -4763   -354   6351  17693 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       4.638e+04  3.019e+03  15.364   &lt;2e-16 ***
+## `R&amp;D Spend`       7.879e-01  4.916e-02  16.026   &lt;2e-16 ***
+## `Marketing Spend` 3.538e-02  1.905e-02   1.857   0.0713 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 9533 on 37 degrees of freedom
+## Multiple R-squared:  0.9495, Adjusted R-squared:  0.9468 
+## F-statistic: 348.1 on 2 and 37 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>mlr_salary_RD &lt;- lm(Profit ~ `R&amp;D Spend`, data = training_data)
+summary(mlr_salary_RD)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Profit ~ `R&amp;D Spend`, data = training_data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -34334  -4894   -340   6752  17147 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 4.902e+04  2.748e+03   17.84   &lt;2e-16 ***
+## `R&amp;D Spend` 8.563e-01  3.357e-02   25.51   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 9836 on 38 degrees of freedom
+## Multiple R-squared:  0.9448, Adjusted R-squared:  0.9434 
+## F-statistic: 650.8 on 1 and 38 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Below we simply use the stepAIC function from MASS library to automate the process of backward elimination. Forward selection, or stepwise could also be selected as direction in the MLR model.</p>
+<pre class="r"><code># Backward regression using stepAIC from MASS package
+library(MASS)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;MASS&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     select</code></pre>
+<pre class="r"><code>mlr_backward &lt;- stepAIC(mlr_salary_full, direction = &quot;backward&quot;, trace = 1)</code></pre>
+<pre><code>## Start:  AIC=741.59
+## Profit ~ `R&amp;D Spend` + Administration + `Marketing Spend` + State
+## 
+##                     Df  Sum of Sq        RSS    AIC
+## - State              2 3.2840e+05 3.3380e+09 737.59
+## - Administration     1 2.5011e+07 3.3627e+09 739.88
+## &lt;none&gt;                            3.3377e+09 741.59
+## - `Marketing Spend`  1 2.3183e+08 3.5695e+09 742.27
+## - `R&amp;D Spend`        1 1.9937e+10 2.3275e+10 817.27
+## 
+## Step:  AIC=737.59
+## Profit ~ `R&amp;D Spend` + Administration + `Marketing Spend`
+## 
+##                     Df  Sum of Sq        RSS    AIC
+## - Administration     1 2.4755e+07 3.3627e+09 735.89
+## &lt;none&gt;                            3.3380e+09 737.59
+## - `Marketing Spend`  1 2.5313e+08 3.5911e+09 738.51
+## - `R&amp;D Spend`        1 2.0599e+10 2.3937e+10 814.39
+## 
+## Step:  AIC=735.89
+## Profit ~ `R&amp;D Spend` + `Marketing Spend`
+## 
+##                     Df  Sum of Sq        RSS    AIC
+## &lt;none&gt;                            3.3627e+09 735.89
+## - `Marketing Spend`  1 3.1338e+08 3.6761e+09 737.45
+## - `R&amp;D Spend`        1 2.3344e+10 2.6706e+10 816.77</code></pre>
+<pre class="r"><code># Get model summary
+summary(mlr_backward)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Profit ~ `R&amp;D Spend` + `Marketing Spend`, data = training_data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -33294  -4763   -354   6351  17693 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       4.638e+04  3.019e+03  15.364   &lt;2e-16 ***
+## `R&amp;D Spend`       7.879e-01  4.916e-02  16.026   &lt;2e-16 ***
+## `Marketing Spend` 3.538e-02  1.905e-02   1.857   0.0713 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 9533 on 37 degrees of freedom
+## Multiple R-squared:  0.9495, Adjusted R-squared:  0.9468 
+## F-statistic: 348.1 on 2 and 37 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>To determine which model to use, we can use the adjusted R-squared. Based on this metric, I will select the model with R&amp;D Spend and Marketing in the model. Real simple!</p>
+</div>

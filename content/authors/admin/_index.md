@@ -61,6 +61,8 @@ email: ""
 highlight_name: false
 ---
 
- Hi, I am Adogbeji Agberien. I reside in Ottawa, Canada's capital city, where I am currently a Biology and Data Science MSc. candidate. I attained my BSc. in Environmental Science, with minors in Biology and Statistics. Prior to pursuing grad studies, I worked as a Data Analyst at Ecofich research and as an undergraduate student, I worked as a Calculus Teaching Assistant, and Undergraduate Research Assistant. My interests are software development for analytics, statistics, statistical machine learning, and biology. 
+Busy times with thesis defence coming up, but yes, I'll add a bit of content which I'll definitely be updating to more interesting stuff following my thesis defence. 
+
+But yes, about me...Hi, I am Adogbeji Agberien. I reside in Ottawa, Canada's capital city, where I am currently a Biology and Data Science MSc. candidate. I attained my BSc. in Environmental Science, with minors in Biology and Statistics. Prior to pursuing grad studies, I worked as a Data Analyst at Ecofich research and as an undergraduate student, I worked as a Calculus Teaching Assistant, and Undergraduate Research Assistant. My interests are software development for analytics, statistics, statistical machine learning, and biology. 
 
 **Software:** R programming | Python | MySQL | QGIS | Tableau | MS Excel

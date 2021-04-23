@@ -1,0 +1,48 @@
+---
+title: Random Forest Regression
+author: Adogbeji Agberien
+date: '2021-04-23'
+slug: []
+categories: []
+tags: []
+subtitle: ''
+summary: 'This post is about Random Forest Regression; currently just implementation in R, hopefully will soon update to include the theory of the method'
+authors: []
+lastmod: '2021-04-23T14:08:57-04:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<p>This post is about Random Forests Regression, currently just its implementation in R. Hopefully in the coming days I will include the theory of the method. The data was acquired from
+<a href="https://www.superdatascience.com/pages/machine-learning">superdatascience</a>. They do a great job of teaching the topic as well.</p>
+<pre class="r"><code># Install and load packages
+required_packages &lt;- c(&quot;tidyverse&quot;, &quot;data.table&quot;, 
+                       &quot;caTools&quot;, &quot;e1071&quot;, &quot;rpart&quot;, &quot;randomForest&quot;,
+                       &quot;rmarkdown&quot;, &quot;knitr&quot;)
+
+packageCheck &lt;- lapply(required_packages, FUN = function(x) {
+  if(!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})</code></pre>
+<pre class="r"><code># Create the random forests model
+salary_rf &lt;- randomForest::randomForest(Salary ~ Level, data = salary_data, ntree = 10)</code></pre>
+<pre class="r"><code># Create a grid for predictions
+x_grid &lt;- data.frame(Level = seq(min(salary_data$Level), max(salary_data$Level), 0.01))
+y_pred &lt;- predict(salary_rf, x_grid)</code></pre>
+<pre class="r"><code># Data visualization
+ggplot() +
+  geom_point(aes(x = salary_data$Level, salary_data$Salary)) +
+  geom_line(aes(x = x_grid$Level, y = y_pred)) + 
+  xlab(&quot;Level&quot;) +
+  ylab(&quot;Salary&quot;) +
+  theme_classic()</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>

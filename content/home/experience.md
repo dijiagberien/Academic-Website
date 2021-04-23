@@ -44,34 +44,25 @@ experience:
         * Analysis of ecological and hydrological data to facilitate commissioning of hydroelectric facilities, and additionally, development of summary reports. 
 
 
-  - title: Research Assistant
+  - title: Data Analyst
     company: Carleton University, Dept of Environmental Science
     company_url: ''
     location: Ottawa, ON, CA
-    date_start: '2017-06-01'
+    date_start: '2016-09-01'
     date_end: '2018-04-30'
     description: |2-
     
         * Analysis of wastewater treatment data to inform on the effectiveness of removing microplastics from water prior to effluent release. 
+        * Analysis of surface water data, in particular, those pertaining to the presence of cyanobacteria. A by product was a publication (here) in which we utilized leveraged signal processing method (Savitzky-Golay) and derivatives to improve spectrophotometric detection
 
   - title: Teaching Assistant
     company: Carleton University, Dept of Mathematics and Statistics
     company_url: ''
     location: Ottawa, ON, CA
-    date_start: '2017-09-01'
+    date_start: '2016-09-01'
     date_end: '2017-12-31'
     description: |2-
         
         * Taught first-year differential and integral calculus, graded assignments. Was nominated for the *Best Teaching Assistant* award, sadly didn't win
-
-  - title: Research Assistant
-    company: Carleton University, Dept of Environmental Engineering
-    company_url: ''
-    location: Ottawa, ON, CA
-    date_start: '2016-09-01'
-    date_end: '2017-08-31'
-    description: |2-
-    
-        * Analysis of surface water data, in particular, those pertaining to the presence of cyanobacteria. A by product was a publication (here) in which we utilized leveraged signal processing method (Savitzky-Golay) and derivatives to improve spectrophotometric detections. 
 
 ---

@@ -1,0 +1,54 @@
+---
+title: Support Vector Regression
+author: Adogbeji Agberien
+date: '2021-04-23'
+slug: []
+categories: []
+tags: []
+subtitle: ''
+summary: 'This post is about Support Vector Regression; currently just implementation in R, hopefully will soon update to include the theory of the method'
+authors: []
+lastmod: '2021-04-23T14:05:27-04:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<p>This post is about Support Vector Regression, currently just its implementation in R. Hopefully in the coming days I will include the theory of the method. The data was acquired from
+<a href="https://www.superdatascience.com/pages/machine-learning">superdatascience</a>. They do a great job of teaching the topic as well.</p>
+<pre class="r"><code># Install and load packages
+required_packages &lt;- c(&quot;tidyverse&quot;, &quot;data.table&quot;, 
+                       &quot;caTools&quot;, &quot;e1071&quot;,
+                       &quot;rmarkdown&quot;, &quot;knitr&quot;)
+
+packageCheck &lt;- lapply(required_packages, FUN = function(x) {
+  if(!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})</code></pre>
+<pre class="r"><code>head(salary_data)</code></pre>
+<pre><code>##             Position Level Salary
+## 1:  Business Analyst     1  45000
+## 2: Junior Consultant     2  50000
+## 3: Senior Consultant     3  60000
+## 4:           Manager     4  80000
+## 5:   Country Manager     5 110000
+## 6:    Region Manager     6 150000</code></pre>
+<pre class="r"><code># Fit a SVM model to the data
+svm_salary &lt;- svm(Salary ~ Level, data = salary_data, scale = T, type = &quot;eps-regression&quot;)</code></pre>
+<pre class="r"><code>x_grid = data.frame(Level = seq(min(salary_data$Level), max(salary_data$Level), 0.5))
+pred_x_grid = predict(svm_salary, x_grid)</code></pre>
+<pre class="r"><code>ggplot() +
+  geom_point(aes(salary_data$Level, salary_data$Salary), colour = &quot;black&quot;) +
+  geom_line(aes(x_grid$Level, pred_x_grid), colour = &quot;red&quot;) +
+  xlab(&quot;Position&quot;) +
+  ylab(&quot;Salary&quot;) +
+  theme_classic()</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>

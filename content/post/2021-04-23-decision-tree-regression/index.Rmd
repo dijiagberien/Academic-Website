@@ -1,0 +1,58 @@
+---
+title: Decision Tree Regression
+author: Adogbeji Agberien
+date: '2021-04-23'
+slug: []
+categories: []
+tags: []
+subtitle: ''
+summary: 'This post is about Decision Tree Regression; currently just implementation in R, hopefully will soon update to include the theory of the method'
+authors: []
+lastmod: '2021-04-23T14:07:26-04:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+This post is about Decision Tree Regression, currently just its implementation in R. Hopefully in the coming days I will include the theory of the method. The data was acquired from 
+[superdatascience](https://www.superdatascience.com/pages/machine-learning). They do a great job of teaching the topic as well.  
+
+```{r warning = F, message = F}
+# Install and load packages
+required_packages <- c("tidyverse", "data.table", 
+                       "caTools", "e1071", "rpart",
+                       "rmarkdown", "knitr")
+
+packageCheck <- lapply(required_packages, FUN = function(x) {
+  if(!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})
+```
+
+```{r echo = F, message=F}
+salary_data <- fread("C:/Users/diji_/Desktop/Data Science/Machine Learning A-Z (Codes and Datasets)/Part 2 - Regression/Section 8 - Decision Tree Regression/R/Position_Salaries.csv")
+```
+
+```{r}
+salary_decision_tree <- rpart(Salary ~ Level, data = salary_data, control = rpart.control(minsplit = 1))
+```
+
+```{r}
+x_grid = data.frame(Level = seq(min(salary_data$Level), max(salary_data$Level), 0.01))
+pred_x_grid = predict(salary_decision_tree, x_grid)
+```
+
+```{r}
+ggplot() +
+  geom_point(aes(x = salary_data$Level, y = salary_data$Salary), colour = "black") +
+  geom_line(aes(x = x_grid$Level, y = pred_x_grid), colour = "red") +
+  xlab("Level") +
+  ylab("Salary") +
+  theme_classic()
+```
+
