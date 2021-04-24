@@ -1,0 +1,94 @@
+---
+title: Support Vector Machines (Linear)
+author: Adogbeji Agberien
+date: '2021-04-23'
+slug: []
+categories: []
+tags: []
+subtitle: ''
+summary: 'This post is about linear Support Vector Machines; currently just implementation in R, hopefully will soon update to include the theory of the method'
+authors: []
+lastmod: '2021-04-23T21:32:19-04:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r warning = F, message = F}
+# Install and load packages
+required_packages <- c("tidyverse", "data.table", 
+                       "caTools", "e1071", "rpart", "randomForest",
+                       "class",
+                       "rmarkdown", "knitr")
+
+packageCheck <- lapply(required_packages, FUN = function(x) {
+  if(!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})
+```
+
+```{r echo = F}
+# Set the working directory
+social_network_ads <- fread("C:/Users/diji_/Desktop/Data Science/Machine Learning A-Z (Codes and Datasets)/Part 3 - Classification/Section 16 - Support Vector Machine (SVM)/R/Social_Network_Ads.csv")
+```
+
+```{r}
+head(social_network_ads)
+```
+
+```{r}
+# Scale the data 
+social_network_ads[, c("Age")] <- social_network_ads[, c("Age")] %>% scale()
+social_network_ads[, c("EstimatedSalary")] <- social_network_ads[, c("EstimatedSalary")] %>% scale()
+```
+
+```{r}
+# Split the data into training and test sets
+set.seed(123)
+data_split <- sample.split(social_network_ads$Purchased, SplitRatio = 0.8)
+training_set <- subset(social_network_ads, data_split == T)
+test_set <- subset(social_network_ads, data_split == F)
+```
+
+```{r}
+# Create the linear svm model
+svm_linear <- svm(Purchased ~ Age + EstimatedSalary, data = training_set, type = "C-classification", kernel = "linear")
+summary(svm_linear)
+```
+
+```{r}
+# Make predictions on the test set
+test_predictions <- predict(svm_linear, test_set)
+```
+
+```{r}
+# Create the confusion matrix
+table(test_predictions, test_set$Purchased)
+```
+
+```{r}
+# Create a grid for visualization
+the_grid <- expand.grid(seq(min(test_set$EstimatedSalary), max(test_set$EstimatedSalary), 0.01),
+                        seq(min(test_set$Age), max(test_set$Age), 0.01)) %>% data.table() %>% 
+  setnames(old = c("Var1", "Var2"), new = c("EstimatedSalary", "Age"))
+```
+
+```{r}
+y_grid_pred <- predict(svm_linear, the_grid)
+```
+
+```{r}
+ggplot() +
+  geom_point(aes(the_grid$EstimatedSalary, the_grid$Age, colour = as.factor(y_grid_pred), alpha = 0.2)) +
+  geom_point(aes(test_set$EstimatedSalary, test_set$Age, colour = as.factor(test_set$Purchased))) +
+  xlab("Salary") +
+  ylab("Age") +
+  ggtitle("SVM used to predict purchase of an item based on age and salary.") +
+  theme_classic()
+```
+
