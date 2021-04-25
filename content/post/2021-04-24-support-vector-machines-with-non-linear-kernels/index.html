@@ -1,14 +1,14 @@
 ---
-title: Support Vector Machines (Linear)
+title: Support Vector Machines with Non-linear kernels
 author: Adogbeji Agberien
-date: '2021-04-23'
+date: '2021-04-24'
 slug: []
 categories: []
 tags: []
 subtitle: ''
-summary: 'This post is about linear Support Vector Machines; currently just implementation in R, hopefully will soon update to include the theory of the method'
+summary: 'This post is about non-linear Support Vector Machines; currently just implementation in R, hopefully will soon update to include the theory of the method'
 authors: []
-lastmod: '2021-04-23T21:32:19-04:00'
+lastmod: '2021-04-24T13:14:52-04:00'
 featured: no
 image:
   caption: ''
@@ -49,22 +49,22 @@ data_split &lt;- sample.split(social_network_ads$Purchased, SplitRatio = 0.8)
 training_set &lt;- subset(social_network_ads, data_split == T)
 test_set &lt;- subset(social_network_ads, data_split == F)</code></pre>
 <pre class="r"><code># Create the linear svm model
-svm_linear &lt;- svm(Purchased ~ Age + EstimatedSalary, data = training_set, type = &quot;C-classification&quot;, kernel = &quot;linear&quot;)
+svm_linear &lt;- svm(Purchased ~ Age + EstimatedSalary, data = training_set, type = &quot;C-classification&quot;, kernel = &quot;radial&quot;)
 summary(svm_linear)</code></pre>
 <pre><code>## 
 ## Call:
 ## svm(formula = Purchased ~ Age + EstimatedSalary, data = training_set, 
-##     type = &quot;C-classification&quot;, kernel = &quot;linear&quot;)
+##     type = &quot;C-classification&quot;, kernel = &quot;radial&quot;)
 ## 
 ## 
 ## Parameters:
 ##    SVM-Type:  C-classification 
-##  SVM-Kernel:  linear 
+##  SVM-Kernel:  radial 
 ##        cost:  1 
 ## 
-## Number of Support Vectors:  121
+## Number of Support Vectors:  82
 ## 
-##  ( 60 61 )
+##  ( 41 41 )
 ## 
 ## 
 ## Number of Classes:  2 
@@ -77,8 +77,8 @@ test_predictions &lt;- predict(svm_linear, test_set)</code></pre>
 table(test_predictions, test_set$Purchased)</code></pre>
 <pre><code>##                 
 ## test_predictions  0  1
-##                0 44  9
-##                1  7 20</code></pre>
+##                0 46  3
+##                1  5 26</code></pre>
 <pre class="r"><code># Create a grid for visualization
 the_grid &lt;- expand.grid(seq(min(test_set$EstimatedSalary), max(test_set$EstimatedSalary), 0.01),
                         seq(min(test_set$Age), max(test_set$Age), 0.01)) %&gt;% data.table() %&gt;% 
