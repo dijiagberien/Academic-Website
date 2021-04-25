@@ -90,6 +90,6 @@ ggplot() +
   geom_point(aes(test_set$EstimatedSalary, test_set$Age, colour = as.factor(test_set$Purchased))) +
   xlab("Salary") +
   ylab("Age") +
-  ggtitle("k-NN used to predict purchase of an item based on age and salary.") +
+  ggtitle("k-NN used to determine purchase of an item based on age and salary.") +
   theme_classic()
 ```

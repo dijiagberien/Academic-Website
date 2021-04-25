@@ -89,7 +89,7 @@ the_grid &lt;- expand.grid(seq(min(test_set$EstimatedSalary), max(test_set$Estim
   geom_point(aes(test_set$EstimatedSalary, test_set$Age, colour = as.factor(test_set$Purchased)), colour = if_else(test_set$Purchased == 1, &quot;black&quot;, &quot;yellow&quot;)) +
   xlab(&quot;Salary&quot;) +
   ylab(&quot;Age&quot;) +
-  ggtitle(&quot;SVM with radial basis kernel used to predict purchase of an item based on age and salary.&quot;) +
+  ggtitle(&quot;SVM with radial basis kernel used to determine purchase of an item based on age and salary.&quot;) +
   theme_classic() +
   theme(legend.position = &quot;none&quot;)</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>

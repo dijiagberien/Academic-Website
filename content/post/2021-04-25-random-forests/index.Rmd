@@ -1,14 +1,14 @@
 ---
-title: Support Vector Machines (Linear)
+title: Random Forests
 author: Adogbeji Agberien
-date: '2021-04-23'
+date: '2021-04-25'
 slug: []
 categories: []
 tags: []
 subtitle: ''
-summary: 'This post is about linear Support Vector Machines; currently just implementation in R, hopefully will soon update to include the theory of the method'
+summary: 'This post is about Random Forests Classification, currently just its implementation in R. Hopefully in the coming days I will include the theory of the method. '
 authors: []
-lastmod: '2021-04-23T21:32:19-04:00'
+lastmod: '2021-04-25T17:05:28-04:00'
 featured: no
 image:
   caption: ''
@@ -17,11 +17,12 @@ image:
 projects: []
 ---
 
+This post is about Random Forests Classification, currently just its implementation in R. Hopefully in the coming days I will include the theory of the method. 
+
 ```{r warning = F, message = F}
 # Install and load packages
 required_packages <- c("tidyverse", "data.table", 
                        "caTools", "e1071", "rpart", "randomForest",
-                       "class",
                        "rmarkdown", "knitr")
 
 packageCheck <- lapply(required_packages, FUN = function(x) {
@@ -34,11 +35,16 @@ packageCheck <- lapply(required_packages, FUN = function(x) {
 
 ```{r echo = F}
 # Set the working directory
-social_network_ads <- fread("C:/Users/diji_/Desktop/Data Science/Machine Learning A-Z (Codes and Datasets)/Part 3 - Classification/Section 16 - Support Vector Machine (SVM)/R/Social_Network_Ads.csv")
+social_network_ads <- fread("C:/Users/diji_/Desktop/Data Science/Machine Learning A-Z (Codes and Datasets)/Part 3 - Classification/Section 20 - Random Forest Classification/R/Social_Network_Ads.csv")
 ```
 
 ```{r}
-head(social_network_ads)
+# Visualize the decision tree on the complete data 
+social_network_ads[, c("Age")] <- social_network_ads[, c("Age")] 
+social_network_ads[, c("EstimatedSalary")] <- social_network_ads[, c("EstimatedSalary")]
+
+plot(rpart(as.factor(Purchased) ~ Age + EstimatedSalary, data = social_network_ads)) 
+text(rpart(as.factor(Purchased) ~ Age + EstimatedSalary, data = social_network_ads))
 ```
 
 ```{r}
@@ -56,19 +62,18 @@ test_set <- subset(social_network_ads, data_split == F)
 ```
 
 ```{r}
-# Create the linear svm model
-svm_linear <- svm(Purchased ~ Age + EstimatedSalary, data = training_set, type = "C-classification", kernel = "linear")
-summary(svm_linear)
+# Create the random forests model
+random_forest_purchase <- randomForest::randomForest(as.factor(Purchased) ~ Age + EstimatedSalary, data = training_set, ntree = 500)
 ```
 
 ```{r}
-# Make predictions on the test set
-test_predictions <- predict(svm_linear, test_set)
+# Make a prediction on the test set
+y_pred_test <- predict(random_forest_purchase, newdata = test_set, type = "class")
 ```
 
 ```{r}
-# Create the confusion matrix
-table(test_predictions, test_set$Purchased)
+# Create the confusion matrix 
+table(y_pred_test, test_set$Purchased)
 ```
 
 ```{r}
@@ -79,7 +84,7 @@ the_grid <- expand.grid(seq(min(test_set$EstimatedSalary), max(test_set$Estimate
 ```
 
 ```{r}
-y_grid_pred <- predict(svm_linear, the_grid)
+y_grid_pred <- predict(random_forest_purchase, the_grid, type = "class")
 ```
 
 ```{r}
@@ -88,8 +93,7 @@ ggplot() +
   geom_point(aes(test_set$EstimatedSalary, test_set$Age, colour = as.factor(test_set$Purchased)), colour = if_else(test_set$Purchased == 1, "black", "yellow")) +
   xlab("Salary") +
   ylab("Age") +
-  ggtitle("SVM with radial basis kernel used to determine purchase of an item based on age and salary.") +
+  ggtitle("Random Forest classifier used to determine purchase of an item based on age and salary.") +
   theme_classic() +
   theme(legend.position = "none")
 ```
-

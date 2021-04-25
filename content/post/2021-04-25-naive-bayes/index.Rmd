@@ -1,14 +1,14 @@
 ---
-title: Support Vector Machines (Linear)
+title: Naive Bayes
 author: Adogbeji Agberien
-date: '2021-04-23'
+date: '2021-04-25'
 slug: []
 categories: []
 tags: []
 subtitle: ''
-summary: 'This post is about linear Support Vector Machines; currently just implementation in R, hopefully will soon update to include the theory of the method'
+summary: 'This post is about Naive Bayes Classifier; currently just implementation in R, hopefully will soon update to include the theory of the method'
 authors: []
-lastmod: '2021-04-23T21:32:19-04:00'
+lastmod: '2021-04-25T14:49:04-04:00'
 featured: no
 image:
   caption: ''
@@ -34,7 +34,7 @@ packageCheck <- lapply(required_packages, FUN = function(x) {
 
 ```{r echo = F}
 # Set the working directory
-social_network_ads <- fread("C:/Users/diji_/Desktop/Data Science/Machine Learning A-Z (Codes and Datasets)/Part 3 - Classification/Section 16 - Support Vector Machine (SVM)/R/Social_Network_Ads.csv")
+social_network_ads <- fread("C:/Users/diji_/Desktop/Data Science/Machine Learning A-Z (Codes and Datasets)/Part 3 - Classification/Section 18 - Naive Bayes/R/Social_Network_Ads.csv")
 ```
 
 ```{r}
@@ -57,18 +57,17 @@ test_set <- subset(social_network_ads, data_split == F)
 
 ```{r}
 # Create the linear svm model
-svm_linear <- svm(Purchased ~ Age + EstimatedSalary, data = training_set, type = "C-classification", kernel = "linear")
-summary(svm_linear)
+naive_bayes_classifier <- naiveBayes(as.factor(Purchased) ~ Age + EstimatedSalary, data = training_set)
 ```
 
 ```{r}
 # Make predictions on the test set
-test_predictions <- predict(svm_linear, test_set)
+test_predictions <- predict(naive_bayes_classifier, test_set)
 ```
 
 ```{r}
 # Create the confusion matrix
-table(test_predictions, test_set$Purchased)
+table(test_predictions, as.factor(test_set$Purchased))
 ```
 
 ```{r}
@@ -79,7 +78,7 @@ the_grid <- expand.grid(seq(min(test_set$EstimatedSalary), max(test_set$Estimate
 ```
 
 ```{r}
-y_grid_pred <- predict(svm_linear, the_grid)
+y_grid_pred <- predict(naive_bayes_classifier, the_grid)
 ```
 
 ```{r}
@@ -88,8 +87,7 @@ ggplot() +
   geom_point(aes(test_set$EstimatedSalary, test_set$Age, colour = as.factor(test_set$Purchased)), colour = if_else(test_set$Purchased == 1, "black", "yellow")) +
   xlab("Salary") +
   ylab("Age") +
-  ggtitle("SVM with radial basis kernel used to determine purchase of an item based on age and salary.") +
+  ggtitle("Naive Bayes used to determine purchase of an item based on age and salary.") +
   theme_classic() +
   theme(legend.position = "none")
 ```
-

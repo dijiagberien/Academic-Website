@@ -57,13 +57,13 @@ test_set <- subset(social_network_ads, data_split == F)
 
 ```{r}
 # Create the linear svm model
-svm_linear <- svm(Purchased ~ Age + EstimatedSalary, data = training_set, type = "C-classification", kernel = "radial")
-summary(svm_linear)
+svm_rb <- svm(Purchased ~ Age + EstimatedSalary, data = training_set, type = "C-classification", kernel = "radial")
+summary(svm_rb)
 ```
 
 ```{r}
 # Make predictions on the test set
-test_predictions <- predict(svm_linear, test_set)
+test_predictions <- predict(svm_rb, test_set)
 ```
 
 ```{r}
@@ -79,7 +79,7 @@ the_grid <- expand.grid(seq(min(test_set$EstimatedSalary), max(test_set$Estimate
 ```
 
 ```{r}
-y_grid_pred <- predict(svm_linear, the_grid)
+y_grid_pred <- predict(svm_rb, the_grid)
 ```
 
 ```{r}
@@ -88,7 +88,7 @@ ggplot() +
   geom_point(aes(test_set$EstimatedSalary, test_set$Age, colour = as.factor(test_set$Purchased)), colour = if_else(test_set$Purchased == 1, "black", "yellow")) +
   xlab("Salary") +
   ylab("Age") +
-  ggtitle("SVM with radial basis kernel used to predict purchase of an item based on age and salary.") +
+  ggtitle("SVM with radial basis kernel used to determine purchase of an item based on age and salary.") +
   theme_classic() +
   theme(legend.position = "none")
 ```

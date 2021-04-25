@@ -1,14 +1,14 @@
 ---
-title: k-Nearest Neighbours
+title: Naive Bayes
 author: Adogbeji Agberien
-date: '2021-04-23'
+date: '2021-04-25'
 slug: []
 categories: []
 tags: []
 subtitle: ''
-summary: 'This post is about k-Nearest Neighbours (k-NN); currently just implementation in R, hopefully will soon update to include the theory of the method'
+summary: 'This post is about Naive Bayes Classifier; currently just implementation in R, hopefully will soon update to include the theory of the method'
 authors: []
-lastmod: '2021-04-23T20:45:35-04:00'
+lastmod: '2021-04-25T14:49:04-04:00'
 featured: no
 image:
   caption: ''
@@ -20,7 +20,6 @@ projects: []
 <script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
-<p>This post is about k-NN; the theory and its implementation in R. Data from <a href="https://www.superdatascience.com/pages/machine-learning">superdatascience</a>.</p>
 <pre class="r"><code># Install and load packages
 required_packages &lt;- c(&quot;tidyverse&quot;, &quot;data.table&quot;, 
                        &quot;caTools&quot;, &quot;e1071&quot;, &quot;rpart&quot;, &quot;randomForest&quot;,
@@ -44,35 +43,32 @@ packageCheck &lt;- lapply(required_packages, FUN = function(x) {
 <pre class="r"><code># Scale the data 
 social_network_ads[, c(&quot;Age&quot;)] &lt;- social_network_ads[, c(&quot;Age&quot;)] %&gt;% scale()
 social_network_ads[, c(&quot;EstimatedSalary&quot;)] &lt;- social_network_ads[, c(&quot;EstimatedSalary&quot;)] %&gt;% scale()</code></pre>
-<pre class="r"><code># Split the data into training and test sets 
+<pre class="r"><code># Split the data into training and test sets
 set.seed(123)
 data_split &lt;- sample.split(social_network_ads$Purchased, SplitRatio = 0.8)
 training_set &lt;- subset(social_network_ads, data_split == T)
 test_set &lt;- subset(social_network_ads, data_split == F)</code></pre>
-<pre class="r"><code># Create the k-NN model 
-y_pred &lt;- class::knn(training_set[, c(&quot;Age&quot;, &quot;EstimatedSalary&quot;)], 
-                     test_set[, c(&quot;Age&quot;, &quot;EstimatedSalary&quot;)], 
-                     cl = training_set$Purchased, 
-                     k = 5)</code></pre>
-<pre class="r"><code># Create the confusion matrix 
-table(y_pred, test_set$Purchased)</code></pre>
-<pre><code>##       
-## y_pred  0  1
-##      0 46  3
-##      1  5 26</code></pre>
+<pre class="r"><code># Create the linear svm model
+naive_bayes_classifier &lt;- naiveBayes(as.factor(Purchased) ~ Age + EstimatedSalary, data = training_set)</code></pre>
+<pre class="r"><code># Make predictions on the test set
+test_predictions &lt;- predict(naive_bayes_classifier, test_set)</code></pre>
+<pre class="r"><code># Create the confusion matrix
+table(test_predictions, as.factor(test_set$Purchased))</code></pre>
+<pre><code>##                 
+## test_predictions  0  1
+##                0 45  4
+##                1  6 25</code></pre>
 <pre class="r"><code># Create a grid for visualization
 the_grid &lt;- expand.grid(seq(min(test_set$EstimatedSalary), max(test_set$EstimatedSalary), 0.01),
                         seq(min(test_set$Age), max(test_set$Age), 0.01)) %&gt;% data.table() %&gt;% 
   setnames(old = c(&quot;Var1&quot;, &quot;Var2&quot;), new = c(&quot;EstimatedSalary&quot;, &quot;Age&quot;))</code></pre>
-<pre class="r"><code>y_grid_pred &lt;- class::knn(training_set[, c(&quot;Age&quot;, &quot;EstimatedSalary&quot;)], 
-                     the_grid[, c(&quot;Age&quot;, &quot;EstimatedSalary&quot;)], 
-                     cl = training_set$Purchased, 
-                     k = 5)</code></pre>
+<pre class="r"><code>y_grid_pred &lt;- predict(naive_bayes_classifier, the_grid)</code></pre>
 <pre class="r"><code>ggplot() +
   geom_point(aes(the_grid$EstimatedSalary, the_grid$Age, colour = as.factor(y_grid_pred), alpha = 0.2)) +
-  geom_point(aes(test_set$EstimatedSalary, test_set$Age, colour = as.factor(test_set$Purchased))) +
+  geom_point(aes(test_set$EstimatedSalary, test_set$Age, colour = as.factor(test_set$Purchased)), colour = if_else(test_set$Purchased == 1, &quot;black&quot;, &quot;yellow&quot;)) +
   xlab(&quot;Salary&quot;) +
   ylab(&quot;Age&quot;) +
-  ggtitle(&quot;k-NN used to determine purchase of an item based on age and salary.&quot;) +
-  theme_classic()</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+  ggtitle(&quot;Naive Bayes used to determine purchase of an item based on age and salary.&quot;) +
+  theme_classic() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
