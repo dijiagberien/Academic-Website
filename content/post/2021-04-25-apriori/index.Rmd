@@ -1,0 +1,94 @@
+---
+title: Apriori
+author: Adogbeji Agberien
+date: '2021-04-25'
+slug: []
+categories: []
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2021-04-25T22:08:49-04:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+Say we had a convenient store with some data about the transactions at the store, and most pertinent among our data are the items the customers purchased. For example, 
+
+- transaction 1 contained mineral water, milk, energy bar, whole wheat rice, and green tea
+
+- transaction 2 contained burgers, meatballs, and eggs.
+
+At the store, thousands of transactions have been completed, and our goal is to leverage this data so we can *organize our store better*. What exactly do I mean by *organize our store better?* Well, think of it...if we know that the customers who buy eggs also buy milk, we may decide to keep both items closer together, thereby simplifying life for the customer, or, we may keep items further apart so the customer has to walk through the store, take a peek at other items we carry, and perhaps include more in his/her shopping basket. 
+
+Apriori can help achieve this goal! The logic behind it is how recommender systems work...you know, *users who watched the movie also liked this movie* or *customers who bought this also bought this*. I think you get the point. 
+
+# About the data 
+
+We have data containing 7501 transactions at the store. The information contained in each transaction is the list of items purchased.
+
+# Analysis
+
+```{r warning = F, message = F}
+# Install and load packages
+required_packages <- c("tidyverse", "data.table", 
+                       "caTools", "e1071", "rpart", "randomForest",
+                       "arules",
+                       "rmarkdown", "knitr")
+
+packageCheck <- lapply(required_packages, FUN = function(x) {
+  if(!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})
+```
+
+```{r}
+# Import the data 
+market_basket <- fread("C:/Users/diji_/Desktop/Data Science/Machine Learning A-Z (Codes and Datasets)/Part 5 - Association Rule Learning/Section 28 - Apriori/R/Market_Basket_Optimisation.csv", header = F, fill = T)
+```
+
+```{r}
+# See the first 5 rows of the data 
+market_basket[1:5, 1:5]
+```
+
+From the above data table we see that the rows are of varying lengths because each transaction contains a different number of items. What we can do to systematically approach our analysis is convert each unique observation into a label i.e. shrimp as column, almond as another column e.t.c. Following that, we can encode each transaction as 1 and 0 depending on whether or not the item was in the specific transaction. 
+
+The R package *arules* simplifies the process of dealing with such sparse data. From *arules* we use the function *read.transactions* to import the data and remove duplicates in each transaction. An example of a duplicate is a basket that contains a certain item 2$\times$ or more. 
+
+```{r}
+#Import the data 
+market_basket <- read.transactions("C:/Users/diji_/Desktop/Data Science/Machine Learning A-Z (Codes and Datasets)/Part 5 - Association Rule Learning/Section 28 - Apriori/R/Market_Basket_Optimisation.csv", sep = ",", rm.duplicates = T)
+```
+
+The above message following implementation of the function *read.transactions* implies that there were 5 transactions with duplicates. 
+
+```{r}
+summary(market_basket)
+```
+
+When we print a summary of the data as shown above, we see that there are 119 unique items that were purchased as indicated in the number of columns, and 7501 transactions as indicated by the number of rows. The density reflects the proportion of non-zero values, where non-zero implies the purchase of an item. The *element (itemset/transaction) length distribution* inform on the frequency at which transactions contain certain number of items...i.e., there were 1754 times that a transaction contained only 1 item, there were 1358 times that a transaction contained only 2 items...e.t.c. The quantile distribution informs that the least number of items in a specific transaction was one, the largest number of items was 20, and on average, each transaction contained approximately 4 items.
+
+Let's take a look at the top 10 items purchased at the store 
+```{r}
+# Frequency plot of items bought at the store 
+itemFrequencyPlot(market_basket, topN = 10)
+```
+
+```{r}
+# Training the apriori algorithm
+association_rules <- apriori(market_basket, parameter = list(supp = 0.005, conf = 0.2))
+```
+
+```{r}
+inspect(sort(association_rules, by = "lift")[1:10])
+```
+
+*Credit to (SuperDataScience)[] for the data and tutorial.*
