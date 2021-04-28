@@ -1,0 +1,133 @@
+---
+title: Artificial Neural Networks
+author: Adogbeji Agberien
+date: '2021-04-27'
+slug: []
+categories: []
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2021-04-27T22:34:27-04:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+# The analysis 
+
+Given data containing several variables that possibly inform on whether or not an individual left or stayed with a bank, can we make predictions on whether other users will leave or stay with the bank?  
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message = F, warning = F}
+# Install and load packages
+required_packages <- c("tidyverse", "data.table", 
+                       "caTools", "e1071", "rpart", "randomForest",
+                       "arules", "h2o",
+                       "rmarkdown", "knitr")
+
+packageCheck <- lapply(required_packages, FUN = function(x) {
+  if(!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})
+```
+
+Since we are using the *h20* package, we have to establish the connection to the server
+```{r message = F, warning = F}
+h2o.init(nthreads = -1)
+```
+
+```{r echo = F}
+# Import the data 
+churn_data <- fread("C:/Users/diji_/Desktop/Data Science/Machine Learning A-Z (Codes and Datasets)/Part 8 - Deep Learning/Section 39 - Artificial Neural Networks (ANN)/R/Churn_Modelling.csv")
+```
+
+Let us see what the data looks like. 
+
+```{r}
+# Show the first 3 rows of the data
+churn_data[1:3]
+```
+
+```{r}
+cat("No of observations: ", nrow(churn_data), "\nNo of labels: ", ncol(churn_data))
+```
+
+The data contains 10,000 observations of 14 variables - 13 predictors and 1 response i.e., "Exited". Among the 13 predictors, there are obviously some variables that will not contribute to information on whether or not the customer will leave the bank. These variables include: Row number, Customer ID, Surname. 
+
+```{r}
+# Get the class of each variable
+str(churn_data)
+```
+
+From the data we want to include in our model, we see that Geography and Gender are categorical variables, meaning we have to encode these prior to use in our algorithm. 
+
+To get summary statistics on the data, I like the *describe* function from the Hmisc package. We see that there are no missing data. For Geography, there are 3 categories - France, Germany, and Spain, and their frequencies are  5014, 2509, and 2477 respectively. Genders are just female and male, and their frequencies are 4543 and 5457 respectively.
+
+By looking at the mean of the different variables, we see that scaling of the variables will be necessary.
+
+```{r}
+# Get some summary statistics on the data 
+Hmisc::describe(churn_data)
+```
+
+```{r}
+# Data preprocessing 
+churn_data_clean <- churn_data[, !c("RowNumber", "CustomerId", "Surname")] %>% 
+  # Conver "Geography" and "Gender" to factors
+  .[, c("Geography", "Gender") := lapply(.SD, as.factor), .SDcols = c("Geography", "Gender")] %>% 
+  # Scale the data
+  .[, c("CreditScore", "Age", "Tenure", "Balance", "NumOfProducts", "HasCrCard", "IsActiveMember", "EstimatedSalary") := 
+      lapply(.SD, scale), .SDcols = c("CreditScore", "Age", "Tenure", "Balance", "NumOfProducts", "HasCrCard", "IsActiveMember", "EstimatedSalary")]
+```
+
+```{r}
+# Split the data into training and test sets 
+set.seed(123)
+sample_split = sample.split(churn_data_clean$Exited, SplitRatio = 0.8)
+training_set = subset(churn_data_clean, sample_split == T)
+test_set = subset(churn_data_clean, sample_split == F)
+```
+
+```{r message = F, warning = F}
+# Fit an ANN on the training set
+churn_ann <- h2o.deeplearning(
+  y = "Exited", training_frame = as.h2o(training_set), 
+  activation = "Rectifier", hidden = 6, epochs = 100, 
+  train_samples_per_iteration = -2)
+```
+
+```{r}
+churn_ann
+```
+
+What we have above is a very simple neural network with one hidden layer, and it uses the recifier activation function. Next, let us evaluate our model using the test set
+
+```{r message = F, warning = F}
+# Make a prediction on the test set
+churn_predict_prob <- h2o.predict(churn_ann, newdata = as.h2o(test_set))
+churn_test_pred <- if_else(as.vector(churn_predict_prob) > 0.5, 1, 0)
+```
+
+```{r}
+# Create a confusion matrix to check prediction accuracy 
+table(churn_test_pred, test_set$Exited)
+```
+
+```{r}
+# Print prediction accuracy
+cat("Our model has a prediction accuracy of:", sum(1542, 198)/sum(1542, 209, 69, 198))
+
+```
+
+```{r}
+h2o.shutdown()
+```
