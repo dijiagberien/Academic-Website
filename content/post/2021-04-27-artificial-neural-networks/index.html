@@ -40,11 +40,11 @@ packageCheck &lt;- lapply(required_packages, FUN = function(x) {
 <pre><code>##  Connection successful!
 ## 
 ## R is connected to the H2O cluster: 
-##     H2O cluster uptime:         1 hours 1 minutes 
+##     H2O cluster uptime:         1 days 17 hours 
 ##     H2O cluster timezone:       America/New_York 
 ##     H2O data parsing timezone:  UTC 
 ##     H2O cluster version:        3.32.0.1 
-##     H2O cluster version age:    6 months and 19 days !!! 
+##     H2O cluster version age:    6 months and 20 days !!! 
 ##     H2O cluster name:           H2O_started_from_R_diji__cti312 
 ##     H2O cluster total nodes:    1 
 ##     H2O cluster total memory:   1.97 GB 
@@ -242,27 +242,27 @@ churn_ann &lt;- h2o.deeplearning(
 ## ==============
 ## 
 ## H2ORegressionModel: deeplearning
-## Model ID:  DeepLearning_model_R_1619573950139_9 
+## Model ID:  DeepLearning_model_R_1619573950139_16 
 ## Status of Neuron Layers: predicting Exited, regression, gaussian distribution, Quadratic loss, 103 weights/biases, 5.1 KB, 800,000 training samples, mini-batch size 1
 ##   layer units      type dropout       l1       l2 mean_rate rate_rms momentum
 ## 1     1    15     Input  0.00 %       NA       NA        NA       NA       NA
-## 2     2     6 Rectifier  0.00 % 0.000000 0.000000  0.138228 0.348771 0.000000
-## 3     3     1    Linear      NA 0.000000 0.000000  0.000177 0.000039 0.000000
+## 2     2     6 Rectifier  0.00 % 0.000000 0.000000  0.142892 0.346926 0.000000
+## 3     3     1    Linear      NA 0.000000 0.000000  0.000156 0.000067 0.000000
 ##   mean_weight weight_rms mean_bias bias_rms
 ## 1          NA         NA        NA       NA
-## 2   -0.124553   0.801298  0.668471 0.376559
-## 3   -0.007484   0.519136  0.960088 0.000000
+## 2   -0.063854   1.316977 -1.049564 3.688807
+## 3    0.182420   0.429987 -0.056082 0.000000
 ## 
 ## 
 ## H2ORegressionMetrics: deeplearning
 ## ** Reported on training data. **
 ## ** Metrics reported on full training frame **
 ## 
-## MSE:  0.1119677
-## RMSE:  0.3346158
-## MAE:  0.2284477
-## RMSLE:  0.2380979
-## Mean Residual Deviance :  0.1119677</code></pre>
+## MSE:  0.1068211
+## RMSE:  0.326835
+## MAE:  0.2083881
+## RMSLE:  0.2282697
+## Mean Residual Deviance :  0.1068211</code></pre>
 <p>What we have above is a very simple neural network with one hidden layer, and it uses the recifier activation function. Next, let us evaluate our model using the test set</p>
 <pre class="r"><code># Make a prediction on the test set
 churn_predict_prob &lt;- h2o.predict(churn_ann, newdata = as.h2o(test_set))</code></pre>
@@ -281,8 +281,8 @@ churn_predict_prob &lt;- h2o.predict(churn_ann, newdata = as.h2o(test_set))</cod
 table(churn_test_pred, test_set$Exited)</code></pre>
 <pre><code>##                
 ## churn_test_pred    0    1
-##               0 1514  201
-##               1   79  206</code></pre>
+##               0 1541  211
+##               1   52  196</code></pre>
 <pre class="r"><code># Print prediction accuracy
 cat(&quot;Our model has a prediction accuracy of:&quot;, sum(1542, 198)/sum(1542, 209, 69, 198))</code></pre>
 <pre><code>## Our model has a prediction accuracy of: 0.8622398</code></pre>
