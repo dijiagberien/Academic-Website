@@ -1,12 +1,12 @@
 ---
-title: "Fall 2021 Spotify Data Science Challenge"
+title: "Fall 2021 Shopify Data Science Challenge"
 author: Adogbeji Agberien
 date: '2021-05-04'
 slug: []
 categories: []
 tags: []
 subtitle: ''
-summary: ''
+summary: 'Shopify Data Science challenge in which some problems were produced and solutions were provided using both R programming and SQL.'
 authors: []
 lastmod: '2021-05-04T15:19:57-04:00'
 featured: no
@@ -15,7 +15,6 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
-output: html_document
 ---
 
 
@@ -35,9 +34,6 @@ What information do we seek?
 
 Well, since the average order value of a 30-day window is being reported, it means that we want information on the average amount spent each time a customer places an order.
 
-
-\frac{R}{N}
-
 AOV $= \frac{R}{N}$ where $R$ = Revenue, and $N$ = no of orders. 
 
 a) Given that sneakers are affordable items, an AOV of $3,145.13 is intuitively absurd, but only through analysis can we confirm this. Some possible contenders for such an AOV are 
@@ -46,7 +42,7 @@ a) Given that sneakers are affordable items, an AOV of $3,145.13 is intuitively 
   - Presence of outliers in terms of order amount 
   - a small/wrongly calculated $N$ value and large $R$
 
-## Analytics approach 
+Analytics approach 
 
 Our analytics will depend on the depth of information we seek, but say we just need a basic perfomance metric that informs on how much customers spend each time they place an order, then we could 
 
@@ -89,7 +85,7 @@ Immediately, we observe things such as the huge standard deviation relative to m
   
 The relatively large deviations from the mean immediately inform us high variance in the data set and possible presence of outliers. The standard error for the order amount is thus high and informs that the mean is likely an inaccurate representation of the true mean. 
 
-b) 
+b) What metric would you report for this dataset?
 
 In this scenario, it is more appropriate to report the median as opposed to the mean because the median is more robust against outliers. We can thus report a value of $284, albeit the presence of outliers in the data. 
 
@@ -125,6 +121,7 @@ Let up apply some more intuition before reporting metrics on our analysis. First
 shopify_sales$created_at <- ymd_hms(shopify_sales$created_at)
 max(shopify_sales$created_at) - min(shopify_sales$created_at)
 ```
+
 Ok, we are good to go. 
 
 Next, what percentage of our data are outliers; a confirmation that we aren't discarding much of our data. 

@@ -1,12 +1,12 @@
 ---
-title: "Fall 2021 Spotify Data Science Challenge"
+title: "Fall 2021 Shopify Data Science Challenge"
 author: Adogbeji Agberien
 date: '2021-05-04'
 slug: []
 categories: []
 tags: []
 subtitle: ''
-summary: ''
+summary: 'Shopify Data Science challenge in which some problems were produced and solutions were provided using both R programming and SQL.'
 authors: []
 lastmod: '2021-05-04T15:19:57-04:00'
 featured: no
@@ -15,10 +15,9 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
-output: html_document
 ---
 
-<script src="index_files/header-attrs/header-attrs.js"></script>
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
 <div id="question-1" class="section level1">
@@ -45,9 +44,7 @@ output: html_document
 <li>Presence of outliers in terms of order amount</li>
 <li>a small/wrongly calculated <span class="math inline">\(N\)</span> value and large <span class="math inline">\(R\)</span></li>
 </ul>
-</div>
-<div id="analytics-approach" class="section level2">
-<h2>Analytics approach</h2>
+<p>Analytics approach</p>
 <p>Our analytics will depend on the depth of information we seek, but say we just need a basic perfomance metric that informs on how much customers spend each time they place an order, then we could</p>
 <ul>
 <li>Perform exploratory data analysis (EDA) to evaluate the presence of outliers</li>
@@ -85,13 +82,13 @@ psych::describe(shopify_sales[, c(&quot;order_amount&quot;, &quot;total_items&qu
 </ul>
 <p>The relatively large deviations from the mean immediately inform us high variance in the data set and possible presence of outliers. The standard error for the order amount is thus high and informs that the mean is likely an inaccurate representation of the true mean.</p>
 <ol start="2" style="list-style-type: lower-alpha">
-<li></li>
+<li>What metric would you report for this dataset?</li>
 </ol>
 <p>In this scenario, it is more appropriate to report the median as opposed to the mean because the median is more robust against outliers. We can thus report a value of $284, albeit the presence of outliers in the data.</p>
 <p>Let us do some more exploratory data analysis, following separation of the order amount into a subset excluding the outliers.</p>
 <pre class="r"><code># Make box-plot to visualize basis summary content of data 
 order_amount_boxplot_full &lt;- boxplot(shopify_sales$order_amount, plot = T)</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>Immediately we see that outliers are indeed present, and the scale of these outliers relative to our data is so much that we are unable to evaluate the non-outlier subset of data within our data set. On that note, let us do another visualization without the outliers, but not discard the outliers though, as they may be interesting components of our data that we may want to further evaluate.</p>
 <pre class="r"><code># Store outliers
 order_amount_outliers &lt;- order_amount_boxplot_full$out
@@ -109,7 +106,7 @@ describe(order_amount_no_outliers)</code></pre>
 ## X1 2.07</code></pre>
 <pre class="r"><code># Let us make another plot showing the distribution of the data 
 boxplot(order_amount_no_outliers)</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>Let up apply some more intuition before reporting metrics on our analysis. Firstly, it is mentioned that we seek data over 30 days, so let us confirm that we do indeed have 30 days worth of data in our data set</p>
 <pre class="r"><code>shopify_sales$created_at &lt;- ymd_hms(shopify_sales$created_at)
 max(shopify_sales$created_at) - min(shopify_sales$created_at)</code></pre>
