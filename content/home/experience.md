@@ -23,7 +23,7 @@ date_format: Jan 2006
 #   Begin multi-line descriptions with YAML's `|2-` multi-line prefix.
 experience:
 
-  - title: Graduate Research Assistant
+  - title: Data Scientist & Graduate Research Assistant
     company: Carleton University, Dept of Biology and Data Science
     company_url: ''
     location: Ottawa, ON, CA
